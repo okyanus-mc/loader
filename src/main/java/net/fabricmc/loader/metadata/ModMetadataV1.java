@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Definition class for "fabric.mod.json" files.
+ * Definition class for "okyanus.json" files.
  */
 public class ModMetadataV1 implements LoaderModMetadata {
 	// Required

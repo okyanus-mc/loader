@@ -30,7 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Definition class for "fabric.mod.json" files.
+ * Definition class for "okyanus.json" files.
  */
 public class ModMetadataV0 implements LoaderModMetadata {
 	// Required

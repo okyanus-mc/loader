@@ -8,17 +8,16 @@ plugins {
 
 	id 'idea'
 	id 'eclipse'
-	id("fabric-loom") version "0.2.3-SNAPSHOT"
+	id("fabric-loom") version "0.2.4-SNAPSHOT"
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-archivesBaseName = "fabric-loader"
+archivesBaseName = "okyanus"
 
 // Fetch build number from Jenkins
-def ENV = System.getenv()
-version = version + "+" + (ENV.BUILD_NUMBER ? ("build." + ENV.BUILD_NUMBER) : "local")
+version = "0.1.0"
 
 repositories {
 	mavenCentral()
@@ -37,9 +36,13 @@ repositories {
 	}
 }
 
+configurations {
+	fatJar
+}
+
 dependencies {
-	minecraft "com.mojang:minecraft:1.14"
-	mappings "net.fabricmc:yarn:1.14+build.3"
+	minecraft "com.mojang:minecraft:1.14.2"
+	mappings "net.fabricmc:yarn:1.14.2+build.7"
 
 	// Minecraft's JAR uses these annotations
 	compile 'com.google.code.findbugs:jsr305:3.0.2'
@@ -65,19 +68,22 @@ dependencies {
 	compile ('net.minecraft:launchwrapper:1.12') {
 		transitive = false
 	}
+
 	compile 'net.sf.jopt-simple:jopt-simple:5.0.3'
+
+	fatJar 'com.google.code.gson:gson:2.8.0'
 }
 
 processResources {
 	inputs.property "version", version
 
 	from(sourceSets.main.resources.srcDirs) {
-		include 'fabric.mod.json'
+		include 'okyanus.json'
 		expand 'version':version
 	}
 
 	from(sourceSets.main.resources.srcDirs) {
-		exclude 'fabric.mod.json'
+		exclude 'okyanus.json'
 	}
 }
 
@@ -86,6 +92,9 @@ jar {
 		attributes (
 			'Main-Class': 'net.fabricmc.loader.launch.server.FabricServerLauncher'
 		)
+	}
+	from {
+		configurations.fatJar.collect { it.isDirectory() ? it : zipTree(it) }
 	}
 }
 
@@ -135,38 +144,4 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	from sourceSets.main.allSource
 }
 
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			artifact(file("${project.buildDir}/libs/$archivesBaseName-${version}.jar")) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
-			artifact(file('src/main/resources/fabric-installer.json')) {
-				builtBy remapJar
-			}
-			artifact(file('src/main/resources/fabric-installer.launchwrapper.json')) {
-				builtBy remapJar
-				classifier = "launchwrapper"
-			}
-		}
-	}
-
-	// select the repositories you want to publish to
-	repositories {
-		if (project.hasProperty('mavenPass')) {
-			maven {
-				url = "http://mavenupload.modmuss50.me/"
-				credentials {
-					username = "buildslave"
-					password = project.getProperty('mavenPass')
-				}
-			}
-		}
-	}
-}
-apply from: 'https://github.com/FabricMC/fabric-docs/raw/master/gradle/license.gradle'
 apply from: 'https://github.com/FabricMC/fabric-docs/raw/master/gradle/ideconfig.gradle'
