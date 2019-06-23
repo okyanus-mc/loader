@@ -41,7 +41,7 @@ import java.util.jar.JarFile;
 public abstract class FabricLauncherBase implements FabricLauncher {
 	public static Path minecraftJar;
 
-	protected static Logger LOGGER = LogManager.getFormatterLogger("FabricLoader");
+	protected static Logger LOGGER = LogManager.getFormatterLogger("Okyanus");
 	private static boolean mixinReady;
 	private static Map<String, Object> properties;
 	private static FabricLauncher launcher;
@@ -83,7 +83,7 @@ public abstract class FabricLauncherBase implements FabricLauncher {
 				}
 
 				// TODO: migrate to Path
-				File deobfJarDir = new File(gameDir.toFile(), ".fabric" + File.separator + "remappedJars" + (gameId.isEmpty() ? "" : File.separator + gameId));
+				File deobfJarDir = new File(gameDir.toFile(), ".okyanus" + File.separator + "remappedJars" + (gameId.isEmpty() ? "" : File.separator + gameId));
 				if (!deobfJarDir.exists()) {
 					deobfJarDir.mkdirs();
 				}
@@ -106,7 +106,7 @@ public abstract class FabricLauncherBase implements FabricLauncher {
 					boolean found = false;
 					while (!found) {
 						if (!emittedInfo) {
-							LOGGER.info("Fabric is preparing JARs on first launch, this may take a few seconds...");
+							LOGGER.info("Preparing...");
 							emittedInfo = true;
 						}
 

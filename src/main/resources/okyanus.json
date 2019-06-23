@@ -5,5 +5,5 @@
   "version": "${version}",
   "environment": "server",
   "description": "Okyanus base mod.",
-  "license": "Apache-2.0",
+  "license": "Apache-2.0"
 }

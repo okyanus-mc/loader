@@ -34,7 +34,7 @@ import java.util.*;
 public class FabricServerLauncher {
 	private static final ClassLoader parentLoader = FabricServerLauncher.class.getClassLoader();
 	private static String mainClass = "net.fabricmc.loader.launch.knot.KnotServer";
-	private static File libFolder = new File("libraries");
+	private static File libFolder = new File(".okyanus" + File.separator + "libraries");
 
 	public static void main(String[] args) {
 		URL propUrl = parentLoader.getResource("fabric-server-launch.properties");
@@ -146,12 +146,8 @@ public class FabricServerLauncher {
 			}
 		}
 
-		// Most popular Minecraft server hosting platforms do not allow
-		// passing arbitrary arguments to the server .JAR. Meanwhile,
-		// Mojang's default server filename is "server.jar" as of
-		// a few versions... let's use this.
 		if (!properties.containsKey("serverJar")) {
-			properties.put("serverJar", "server.jar");
+			properties.put("serverJar", ".okyanus" + File.separator + "server.jar");
 			try (FileOutputStream stream = new FileOutputStream(propertiesFile)) {
 				properties.store(stream, null);
 			}
