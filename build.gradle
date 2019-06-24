@@ -71,6 +71,8 @@ dependencies {
 
 	compile 'net.sf.jopt-simple:jopt-simple:5.0.3'
 
+	compile project(":api")
+
 	fatJar 'com.google.code.gson:gson:2.8.0'
 }
 

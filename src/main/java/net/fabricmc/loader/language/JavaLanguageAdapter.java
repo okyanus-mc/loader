@@ -32,16 +32,10 @@ public class JavaLanguageAdapter implements LanguageAdapter {
 		String className = itfString + ".class";
 
 		// TODO: Be a bit more involved
-		switch (itfString) {
-			case "net/fabricmc/api/ClientModInitializer":
-				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-					return false;
-				}
-				break;
-			case "net/fabricmc/api/DedicatedServerModInitializer":
-				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-					return false;
-				}
+		if (itfString.equals("club/issizler/okyanus/api/Mod")) {
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+				return false;
+			}
 		}
 
 		InputStream stream = FabricLauncherBase.getLauncher().getResourceAsStream(className);
