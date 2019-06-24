@@ -20,7 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class EntrypointBranding {
-	public static final String FABRIC = "fabric";
+	public static final String FABRIC = "https://okyanus-mc.github.io/docs/";
 	public static final String VANILLA = "vanilla";
 
 	private static final Logger LOGGER = LogManager.getLogger("Fabric|Branding");

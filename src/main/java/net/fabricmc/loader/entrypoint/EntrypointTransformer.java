@@ -16,17 +16,21 @@
 
 package net.fabricmc.loader.entrypoint;
 
+import club.issizler.okyanus.transform.Transformers;
 import com.google.common.collect.ImmutableList;
+import javassist.*;
 import net.fabricmc.loader.entrypoint.patches.EntrypointPatchBranding;
 import net.fabricmc.loader.entrypoint.patches.EntrypointPatchFML125;
 import net.fabricmc.loader.entrypoint.patches.EntrypointPatchHook;
 import net.fabricmc.loader.launch.common.FabricLauncher;
+import net.fabricmc.loader.launch.common.FabricLauncherBase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -38,8 +42,11 @@ public class EntrypointTransformer {
 	private final List<EntrypointPatch> patches;
 	private Map<String, byte[]> patchedClasses;
 	private boolean entrypointsLocated = false;
+	private ClassPool pool = new ClassPool();
 
 	public EntrypointTransformer() {
+		pool.appendClassPath(new LoaderClassPath(FabricLauncherBase.getLauncher().getTargetClassLoader()));
+
 		patches = ImmutableList.of(
 			new EntrypointPatchHook(this),
 			new EntrypointPatchBranding(this),
@@ -88,6 +95,24 @@ public class EntrypointTransformer {
 	 * @return The transformed class data.
 	 */
 	public byte[] transform(String className) {
-		return patchedClasses.get(className);
+		byte[] fabricPatched =  patchedClasses.get(className);
+
+		if (fabricPatched != null)
+			return fabricPatched;
+
+		if (!Transformers.shouldTransform(className))
+			return null;
+
+		try {
+			CtClass c = pool.get(className);
+			return Transformers.transform(className, c);
+		} catch (IOException | CannotCompileException | NotFoundException e) {
+			LogManager.getLogger().fatal("Couldn't compile transformed class " + className);
+
+			e.printStackTrace();
+			System.exit(-1);
+		}
+
+		return null;
 	}
 }

@@ -38,6 +38,7 @@ repositories {
 
 configurations {
 	fatJar
+	compile.extendsFrom fatJar
 }
 
 dependencies {
@@ -74,6 +75,7 @@ dependencies {
 	compile project(":api")
 
 	fatJar 'com.google.code.gson:gson:2.8.0'
+	fatJar 'org.javassist:javassist:3.25.0-GA'
 }
 
 processResources {
