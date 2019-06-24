@@ -155,8 +155,8 @@ public class FabricServerLauncher {
 
 		if (!properties.containsKey("serverUrl")) {
 			// TODO: update this every time a new version gets released
-			// Current version: 1.14.3-pre4
-			properties.put("serverUrl", "https://launcher.mojang.com/v1/objects/d5397db937499277165abb27f8af04885be8b6b6/server.jar");
+			// Current version: 1.14.3
+			properties.put("serverUrl", "https://launcher.mojang.com/v1/objects/d0d0fe2b1dc6ab4c65554cb734270872b72dadd6/server.jar");
 
 			try (FileOutputStream stream = new FileOutputStream(propertiesFile)) {
 				properties.store(stream, null);

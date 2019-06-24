@@ -33690,12 +33690,12 @@ CLASS	fw$17	net/minecraft/class_2357$17
 METHOD	fw$17	(Lbce;Laxa;)V	a	method_17201
 CLASS	fw$18	net/minecraft/class_2357$18
 CLASS	fw$18$1	net/minecraft/class_2357$18$1
-FIELD	fw$18$1	Lfw$18;	b	field_13366
-METHOD	fw$18$1	(Lbce;Laxb;)V	a	method_17202
+FIELD	fw$18$1	Lfw$18;	b	field_13369
+METHOD	fw$18$1	(Lbce;Laxb;)V	a	method_17203
 CLASS	fw$19	net/minecraft/class_2357$19
 CLASS	fw$19$1	net/minecraft/class_2357$19$1
-FIELD	fw$19$1	Lfw$19;	b	field_13369
-METHOD	fw$19$1	(Lbce;Laxb;)V	a	method_17203
+FIELD	fw$19$1	Lfw$19;	b	field_13366
+METHOD	fw$19$1	(Lbce;Laxb;)V	a	method_17202
 CLASS	fw$2	net/minecraft/class_2357$2
 CLASS	fw$20	net/minecraft/class_2357$20
 CLASS	fw$3	net/minecraft/class_2357$3
