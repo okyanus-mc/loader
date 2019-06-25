@@ -14,7 +14,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-archivesBaseName = "okyanus"
+archivesBaseName = "okyanus-1.14.3"
 
 // Fetch build number from Jenkins
 version = "0.1.0"
