@@ -16,7 +16,6 @@
 
 package net.fabricmc.loader.metadata;
 
-import com.google.common.base.Joiner;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import net.fabricmc.api.EnvType;
@@ -39,10 +38,11 @@ public class ModMetadataV1 implements LoaderModMetadata {
 	private Version version;
 
 	// Optional (mod loading)
-	private Environment environment = Environment.UNIVERSAL;
+	private Environment environment = Environment.SERVER;
 	private EntrypointContainer entrypoints = new EntrypointContainer();
 	private JarEntry[] jars = new JarEntry[0];
 	private MixinEntry[] mixins = new MixinEntry[0];
+	private Map<String, String> transformers = new HashMap<>();
 
 	// Optional (dependency resolution)
 	private DependencyContainer depends = new DependencyContainer();
@@ -68,7 +68,7 @@ public class ModMetadataV1 implements LoaderModMetadata {
 
 	@Override
 	public String getType() {
-		return "fabric";
+		return "okyanus";
 	}
 
 	@Override
@@ -209,6 +209,11 @@ public class ModMetadataV1 implements LoaderModMetadata {
 	@Override
 	public Collection<ModDependency> getBreaks() {
 		return breaks.dependencies;
+	}
+
+	@Override
+	public Map<String, String> getTransformers() {
+		return transformers;
 	}
 
 	public static class DependencyContainer {

@@ -104,6 +104,11 @@ public class ModMetadataV0 implements LoaderModMetadata {
 	}
 
 	@Override
+	public Map<String, String> getTransformers() {
+		return new HashMap<>();
+	}
+
+	@Override
 	public Collection<String> getMixinConfigs(EnvType type) {
 		List<String> mixinConfigs = new ArrayList<>(Arrays.asList(mixins.common));
 		if (type == EnvType.CLIENT) {
