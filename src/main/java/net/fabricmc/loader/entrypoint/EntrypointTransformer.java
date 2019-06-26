@@ -95,7 +95,7 @@ public class EntrypointTransformer {
 	 * @return The transformed class data.
 	 */
 	public byte[] transform(String className) {
-		byte[] fabricPatched =  patchedClasses.get(className);
+		byte[] fabricPatched = patchedClasses.get(className);
 
 		if (fabricPatched != null)
 			return fabricPatched;

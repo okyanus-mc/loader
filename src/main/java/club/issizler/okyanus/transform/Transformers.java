@@ -11,30 +11,32 @@ import java.util.Map;
 
 public class Transformers {
 
-	private static Map<String, Transformer> transformerMap = new HashMap<String, Transformer>();
+    private static Map<String, String> transformerMap = new HashMap<>();
 
-	public static boolean shouldTransform(String name) {
-		return transformerMap.containsKey(name);
-	}
+    public static boolean shouldTransform(String name) {
+        return transformerMap.containsKey(name);
+    }
 
-	public static byte[] transform(String name, CtClass c) throws IOException, CannotCompileException, NotFoundException {
-		return transformerMap.get(name).transform(c);
-	}
+    public static byte[] transform(String name, CtClass c) throws NotFoundException, CannotCompileException, IOException {
+        try {
+            String transformer = transformerMap.get(name);
+            Class transClass = Class.forName(transformer);
 
-	public static void add(String clazz, String transformer) {
-		LogManager.getLogger().info("Added transformer for " + clazz + ": " + transformer);
+            if (!Transformer.class.isAssignableFrom(transClass)) {
+                throw new RuntimeException("Transformer class does not implement Transformer!");
+            }
 
-		try {
-			Class transClass = Class.forName(transformer);
+            return ((Transformer) transClass.newInstance()).transform(c);
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
 
-			if (!Transformer.class.isAssignableFrom(transClass)) {
-				throw new RuntimeException("Transformer class does not implement Transformer!");
-			}
+        return null;
+    }
 
-			transformerMap.put(clazz, (Transformer) transClass.newInstance());
-		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-	}
+    public static void add(String clazz, String transformer) {
+        LogManager.getLogger().info("Added transformer for " + clazz + ": " + transformer);
+        transformerMap.put(clazz, transformer);
+    }
 }
