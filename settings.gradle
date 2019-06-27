@@ -8,9 +8,3 @@ pluginManagement {
 	}
 }
 rootProject.name='okyanus-loader'
-
-// TODO: Publish API on some maven repo and reference it from there
-// TODO: this is development only
-
-include ":api"
-project(":api").projectDir = new File("../api")
