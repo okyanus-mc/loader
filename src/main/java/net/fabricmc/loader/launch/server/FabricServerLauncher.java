@@ -20,17 +20,20 @@ import club.issizler.okyanus.json.installer.InstallerFile;
 import club.issizler.okyanus.json.installer.Library;
 import com.google.gson.Gson;
 import net.fabricmc.loader.util.UrlUtil;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
+import java.nio.file.*;
+import java.util.*;
+import java.util.stream.Stream;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 public class FabricServerLauncher {
 	private static final ClassLoader parentLoader = FabricServerLauncher.class.getClassLoader();
@@ -116,16 +119,7 @@ public class FabricServerLauncher {
 
 		System.setProperty("fabric.gameJarPath", serverJar.getAbsolutePath());
 		try {
-			List<URL> urls = new ArrayList<>();
-
-			urls.add(FabricServerLauncher.class.getProtectionDomain().getCodeSource().getLocation());
-			urls.add(UrlUtil.asUrl(serverJar));
-
-			for (File file : Objects.requireNonNull(libFolder.listFiles())) {
-				urls.add(file.toURI().toURL());
-			}
-
-			URLClassLoader newClassLoader = new InjectingURLClassLoader(urls.toArray(new URL[]{}), parentLoader, "com.google.common.jimfs.");
+			URLClassLoader newClassLoader = new InjectingURLClassLoader(new URL[]{FabricServerLauncher.class.getProtectionDomain().getCodeSource().getLocation(), UrlUtil.asUrl(serverJar)}, parentLoader, "com.google.common.jimfs.");
 			Thread.currentThread().setContextClassLoader(newClassLoader);
 			launch(mainClass, newClassLoader, runArguments);
 		} catch (Exception ex) {
@@ -160,17 +154,20 @@ public class FabricServerLauncher {
 	}
 
 	private static void checkLibraries() {
+		if (FabricServerLauncher.class.getResource("/mappings/mappings.tiny") != null)
+			return; // We're already patched!
+
 		InputStream in = FabricServerLauncher.class.getResourceAsStream("/fabric-installer.json");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		InstallerFile file = new Gson().fromJson(reader, InstallerFile.class);
-
+//
 		if (!libFolder.exists()) {
 			libFolder.mkdirs();
 		}
 
 		for (Library library : file.libraries.common) {
 			File libFile = new File(libFolder, sanitizedLibName(library.name));
-			if (!libFile.exists() && !libFile.getName().contains("jimfs")) {
+			if (!libFile.exists()) {
 				downloadLibrary(library);
 			}
 		}
@@ -189,6 +186,47 @@ public class FabricServerLauncher {
 			} catch (MalformedURLException e) {
 				throw new RuntimeException(e);
 			}
+		}
+
+		System.out.println("Patching current jar...");
+		try (FileSystem thisFs = FileSystems.newFileSystem(Paths.get(FabricServerLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI()), null)) {
+
+			for (File lib : Objects.requireNonNull(libFolder.listFiles())) {
+				System.out.println("Applying library " + lib);
+
+				try (FileSystem libFs = FileSystems.newFileSystem(Paths.get(lib.toURI()), null)){
+					for (Path directory : libFs.getRootDirectories()) {
+						copyDir(directory, thisFs.getPath("/"));
+					}
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+
+				lib.deleteOnExit();
+			}
+
+		} catch (URISyntaxException | IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		System.out.println("Please re-start this JAR to complete installation!");
+		System.exit(0);
+	}
+
+	private static void copyDir(Path from, Path to) {
+		try (Stream<Path> stream = Files.walk(from)) {
+			stream.forEachOrdered(path -> {
+				try {
+					if (!path.toString().contains("MANIFEST.MF"))
+						Files.copy(path, to.relativize(path), StandardCopyOption.REPLACE_EXISTING);
+				} catch (NegativeArraySizeException | FileAlreadyExistsException e) {
+					/* ignore */
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			});
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
