@@ -29,10 +29,10 @@ public final class EntrypointBranding {
 	}
 
 	public static String brand(final String brand) {
-		if (brand == null || brand.isEmpty()) {
-			LOGGER.warn("Null or empty branding found!", new IllegalStateException());
-			return FABRIC;
-		}
-		return VANILLA.equals(brand) ? FABRIC : brand + ',' + FABRIC;
+//		if (brand == null || brand.isEmpty()) {
+//			LOGGER.warn("Null or empty branding found!", new IllegalStateException());
+//			return FABRIC;
+//		}
+		return "okyanus";
 	}
 }

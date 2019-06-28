@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "fabricloader",
-  "name": "Fabric Loader",
+  "id": "okyanus",
+  "name": "Okyanus Loader",
   "version": "${version}",
-  "environment": "*",
+  "environment": "server",
   "description": "The base mod loader.",
   "license": "Apache-2.0"
 }

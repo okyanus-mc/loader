@@ -41,7 +41,7 @@ import java.util.jar.JarFile;
 public abstract class FabricLauncherBase implements FabricLauncher {
 	public static Path minecraftJar;
 
-	protected static Logger LOGGER = LogManager.getFormatterLogger("FabricLoader");
+	protected static Logger LOGGER = LogManager.getFormatterLogger("Okyanus");
 	private static boolean mixinReady;
 	private static Map<String, Object> properties;
 	private static FabricLauncher launcher;

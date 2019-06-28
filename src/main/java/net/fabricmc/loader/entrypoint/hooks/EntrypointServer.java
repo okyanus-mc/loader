@@ -19,7 +19,6 @@ package net.fabricmc.loader.entrypoint.hooks;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.FabricLoader;
-import net.fabricmc.loader.api.EntrypointException;
 
 import java.io.File;
 
