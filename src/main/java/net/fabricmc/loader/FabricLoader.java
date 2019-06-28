@@ -16,7 +16,9 @@
 
 package net.fabricmc.loader;
 
+import club.issizler.okyanus.api.Mod;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.EntrypointException;
 import net.fabricmc.loader.api.LanguageAdapter;
 import net.fabricmc.loader.api.MappingResolver;
 import net.fabricmc.loader.api.SemanticVersion;

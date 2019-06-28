@@ -141,6 +141,8 @@ class EntrypointStorage {
 				if (result != null) {
 					results.add(result);
 				}
+			} catch (LanguageAdapterException e) {
+				/* ignore for compatibility */
 			} catch (Exception e) {
 				hadException = true;
 				FabricLoader.INSTANCE.getLogger().error("Exception occured while getting '" + key + "' entrypoints @ " + entry, e);
