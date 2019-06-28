@@ -333,7 +333,7 @@ public class ModResolver {
 
 			if (Files.isDirectory(path)) {
 				// Directory
-				modJson = path.resolve("okyanus.json");
+				modJson = path.resolve("fabric.mod.json");
 				rootDir = path;
 
 				if (loader.isDevelopmentEnvironment() && !Files.exists(modJson)) {
@@ -346,7 +346,7 @@ public class ModResolver {
 				// JAR file
 				try {
 					jarFs = FileSystemUtil.getJarFileSystem(path, false);
-					modJson = jarFs.get().getPath("okyanus.json");
+					modJson = jarFs.get().getPath("fabric.mod.json");
 					rootDir = jarFs.get().getRootDirectories().iterator().next();
 				} catch (IOException e) {
 					throw new RuntimeException("Failed to open mod JAR at " + path + "!");
@@ -358,11 +358,11 @@ public class ModResolver {
 			try (InputStream stream = Files.newInputStream(modJson)) {
 				info = ModMetadataParser.getMods(loader, stream);
 			} catch (JsonSyntaxException e) {
-				throw new RuntimeException("Mod at '" + path + "' has an invalid okyanus.json file!", e);
+				throw new RuntimeException("Mod at '" + path + "' has an invalid fabric.mod.json file!", e);
 			} catch (NoSuchFileException e) {
 				info = new LoaderModMetadata[0];
 			} catch (IOException e) {
-				throw new RuntimeException("Failed to open okyanus.json for mod at '" + path + "'!", e);
+				throw new RuntimeException("Failed to open fabric.mod.json for mod at '" + path + "'!", e);
 			}
 
 			for (LoaderModMetadata i : info) {

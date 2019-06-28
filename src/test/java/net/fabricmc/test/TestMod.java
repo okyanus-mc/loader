@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package net.fabricmc.loader.entrypoint.hooks;
+package net.fabricmc.test;
 
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public final class EntrypointBranding {
-	public static final String FABRIC = "fabric";
-	public static final String VANILLA = "vanilla";
+public class TestMod implements ModInitializer {
 
-	private static final Logger LOGGER = LogManager.getLogger("Fabric|Branding");
+	private static final Logger LOGGER = LogManager.getFormatterLogger("TestMod");
 
-	private EntrypointBranding() {
+	@Override
+	public void onInitialize() {
+		LOGGER.info("**************************");
+		LOGGER.info("Hello from Fabric");
+		LOGGER.info("**************************");
 	}
 
-	public static String brand(final String brand) {
-		if (brand == null || brand.isEmpty()) {
-			LOGGER.warn("Null or empty branding found!", new IllegalStateException());
-			return FABRIC;
-		}
-		return VANILLA.equals(brand) ? FABRIC : brand + ',' + FABRIC;
-	}
 }

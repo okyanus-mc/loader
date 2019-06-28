@@ -16,25 +16,16 @@
 
 package net.fabricmc.loader.launch.server;
 
-import club.issizler.okyanus.json.installer.InstallerFile;
-import club.issizler.okyanus.json.installer.Library;
-import com.google.gson.Gson;
 import net.fabricmc.loader.util.UrlUtil;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.*;
 
 public class FabricServerLauncher {
 	private static final ClassLoader parentLoader = FabricServerLauncher.class.getClassLoader();
 	private static String mainClass = "net.fabricmc.loader.launch.knot.KnotServer";
-	private static File libFolder = new File(".okyanus" + File.separator + "libraries");
 
 	public static void main(String[] args) {
 		URL propUrl = parentLoader.getResource("fabric-server-launch.properties");
@@ -55,7 +46,6 @@ public class FabricServerLauncher {
 
 		if (!dev) {
 			try {
-				checkLibraries();
 				setup(args);
 			} catch (Exception e) {
 				throw new RuntimeException("Failed to setup Fabric server environment!", e);
@@ -63,67 +53,6 @@ public class FabricServerLauncher {
 		} else {
 			launch(mainClass, FabricServerLauncher.class.getClassLoader(), args);
 		}
-	}
-
-	private static void checkLibraries() {
-		InputStream in = FabricServerLauncher.class.getResourceAsStream("/fabric-installer.json");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		InstallerFile file = new Gson().fromJson(reader, InstallerFile.class);
-
-		if (!libFolder.exists()) {
-			libFolder.mkdirs();
-		}
-
-		for (Library library : file.libraries.common) {
-			File libFile = new File(libFolder, sanitizedLibName(library.name));
-			if (!libFile.exists()) {
-				downloadLibrary(library);
-			}
-		}
-
-		for (Library library : file.libraries.server) {
-			File libFile = new File(libFolder, sanitizedLibName(library.name));
-			if (!libFile.exists()) {
-				downloadLibrary(library);
-			}
-		}
-	}
-//
-//	private static void addToClasspath(File libFile) {
-//		try {
-//			URLClassLoader cl = (URLClassLoader) FabricServerLauncher.class.getClassLoader();
-//			Method m = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-//			m.setAccessible(true);
-//			m.invoke(cl, libFile.toURI().toURL());
-//		} catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | MalformedURLException e) {
-//			e.printStackTrace();
-//			System.exit(-1);
-//		}
-//	}
-
-	private static String sanitizedLibName(String name) {
-		return name.replace(':', '.');
-	}
-
-	private static void downloadLibrary(Library library) {
-		downloadFile(new File(libFolder, sanitizedLibName(library.name)), mkUrlFromName(library.name, library.url));
-	}
-
-	private static URL mkUrlFromName(String name, String root) {
-		String[] spname = name.split(":");
-
-		String path = spname[0].replace('.', '/') + "/" + spname[1] + "/" + spname[2];
-		String fname = spname[1] + "-" + spname[2] + ".jar";
-
-		try {
-			return new URL(root + path + "/" + fname);
-		} catch (MalformedURLException e) {
-			System.err.println("Malformed library URL!");
-			e.printStackTrace();
-			System.exit(1);
-		}
-
-		return null;
 	}
 
 	private static void launch(String mainClass, ClassLoader loader, String[] args) {
@@ -137,7 +66,7 @@ public class FabricServerLauncher {
 
 	private static void setup(String... runArguments) throws IOException {
 		// Pre-load "fabric-server-launcher.properties"
-		File propertiesFile = new File("okyanus-loader.properties");
+		File propertiesFile = new File("fabric-server-launcher.properties");
 		Properties properties = new Properties();
 
 		if (propertiesFile.exists()) {
@@ -146,61 +75,36 @@ public class FabricServerLauncher {
 			}
 		}
 
+		// Most popular Minecraft server hosting platforms do not allow
+		// passing arbitrary arguments to the server .JAR. Meanwhile,
+		// Mojang's default server filename is "server.jar" as of
+		// a few versions... let's use this.
 		if (!properties.containsKey("serverJar")) {
-			properties.put("serverJar", ".okyanus" + File.separator + "server.jar");
+			properties.put("serverJar", "server.jar");
 			try (FileOutputStream stream = new FileOutputStream(propertiesFile)) {
 				properties.store(stream, null);
 			}
 		}
-
-		if (!properties.containsKey("serverUrl")) {
-			// TODO: update this every time a new version gets released
-			// Current version: 1.14.3
-			properties.put("serverUrl", "https://launcher.mojang.com/v1/objects/d0d0fe2b1dc6ab4c65554cb734270872b72dadd6/server.jar");
-
-			try (FileOutputStream stream = new FileOutputStream(propertiesFile)) {
-				properties.store(stream, null);
-			}
-		}
-
 
 		File serverJar = new File((String) properties.get("serverJar"));
-		URL serverUrl = new URL((String) properties.get("serverUrl"));
 
 		if (!serverJar.exists()) {
-			downloadFile(serverJar, serverUrl);
+			System.err.println("Could not find Minecraft server .JAR (" + properties.get("serverJar") + ")!");
+			System.err.println();
+			System.err.println("Fabric's server-side launcher expects the server .JAR to be provided.");
+			System.err.println("You can edit its location in fabric-server-launcher.properties.");
+			System.err.println();
+			System.err.println("Without the official Minecraft server .JAR, Fabric Loader cannot launch.");
+			throw new RuntimeException("Searched for '" + serverJar.getName() + "' but could not find it.");
 		}
 
 		System.setProperty("fabric.gameJarPath", serverJar.getAbsolutePath());
 		try {
-			List<URL> urls = new ArrayList<>();
-
-			urls.add(FabricServerLauncher.class.getProtectionDomain().getCodeSource().getLocation());
-			urls.add(UrlUtil.asUrl(serverJar));
-
-			for (File file : Objects.requireNonNull(libFolder.listFiles())) {
-				urls.add(file.toURI().toURL());
-			}
-
-			URLClassLoader newClassLoader = new InjectingURLClassLoader(urls.toArray(new URL[]{}), parentLoader);//, "com.google.common.jimfs.");
+			URLClassLoader newClassLoader = new InjectingURLClassLoader(new URL[] { FabricServerLauncher.class.getProtectionDomain().getCodeSource().getLocation(), UrlUtil.asUrl(serverJar) }, parentLoader, "com.google.common.jimfs.");
 			Thread.currentThread().setContextClassLoader(newClassLoader);
 			launch(mainClass, newClassLoader, runArguments);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
-		}
-	}
-
-	private static void downloadFile(File file, URL url) {
-		System.out.println(url + " => " + file.getName());
-
-		try {
-			ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-			FileOutputStream fos = new FileOutputStream(file);
-			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-		} catch (IOException e) {
-			System.err.println("Could not download file!");
-			e.printStackTrace();
-			System.exit(-1);
 		}
 	}
 }

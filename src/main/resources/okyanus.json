@@ -1,9 +1,0 @@
-{
-  "schemaVersion": 1,
-  "id": "okyanus",
-  "name": "Okyanus Base",
-  "version": "${version}",
-  "environment": "server",
-  "description": "Okyanus base mod.",
-  "license": "Apache-2.0"
-}

@@ -61,7 +61,7 @@ public interface FabricLoader {
 
 	/**
 	 * Checks if a mod with a given ID is loaded.
-	 * @param id The ID of the mod, as defined in okyanus.json.
+	 * @param id The ID of the mod, as defined in fabric.mod.json.
 	 * @return Whether or not the mod is present in this FabricLoader instance.
 	 */
 	boolean isModLoaded(String id);

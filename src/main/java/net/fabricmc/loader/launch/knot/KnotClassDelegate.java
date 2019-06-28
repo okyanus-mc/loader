@@ -16,9 +16,7 @@
 
 package net.fabricmc.loader.launch.knot;
 
-import club.issizler.okyanus.transform.Transformers;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.entrypoint.EntrypointTransformer;
 import net.fabricmc.loader.launch.common.FabricLauncherBase;
 import net.fabricmc.loader.transformer.FabricTransformer;
@@ -74,8 +72,6 @@ class KnotClassDelegate {
 		if (transformInitialized) {
 			throw new RuntimeException("Cannot initialize KnotClassDelegate twice!");
 		}
-
-		FabricLoader.getInstance().getAllMods().forEach(mod -> mod.getMetadata().getTransformers().forEach(Transformers::add));
 
 		try {
 			Constructor<MixinTransformer> constructor = MixinTransformer.class.getDeclaredConstructor();

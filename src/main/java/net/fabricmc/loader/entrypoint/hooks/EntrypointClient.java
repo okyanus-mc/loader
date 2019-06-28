@@ -16,8 +16,11 @@
 
 package net.fabricmc.loader.entrypoint.hooks;
 
-import club.issizler.okyanus.api.Mod;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.FabricLoader;
+import net.fabricmc.loader.api.EntrypointException;
 
 import java.io.File;
 
@@ -28,6 +31,7 @@ public final class EntrypointClient {
 		}
 
 		FabricLoader.INSTANCE.instantiateMods(runDir, gameInstance);
-		EntrypointUtils.logErrors("main", FabricLoader.INSTANCE.getEntrypoints("main", Mod.class), Mod::init);
+		EntrypointUtils.logErrors("main", FabricLoader.INSTANCE.getEntrypoints("main", ModInitializer.class), ModInitializer::onInitialize);
+		EntrypointUtils.logErrors("client", FabricLoader.INSTANCE.getEntrypoints("client", ClientModInitializer.class), ClientModInitializer::onInitializeClient);
 	}
 }

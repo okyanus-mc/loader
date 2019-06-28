@@ -34,13 +34,13 @@ public class ClasspathModCandidateFinder implements ModCandidateFinder {
 		Stream<URL> urls;
 
 		if (FabricLauncherBase.getLauncher().isDevelopment()) {
-			// Search for URLs which point to 'okyanus.json' entries, to be considered as mods.
+			// Search for URLs which point to 'fabric.mod.json' entries, to be considered as mods.
 			try {
-				Enumeration<URL> mods = FabricLauncherBase.getLauncher().getTargetClassLoader().getResources("okyanus.json");
+				Enumeration<URL> mods = FabricLauncherBase.getLauncher().getTargetClassLoader().getResources("fabric.mod.json");
 				Set<URL> modsList = new HashSet<>();
 				while (mods.hasMoreElements()) {
 					try {
-						modsList.add(UrlUtil.getSource("okyanus.json", mods.nextElement()));
+						modsList.add(UrlUtil.getSource("fabric.mod.json", mods.nextElement()));
 					} catch (UrlConversionException e) {
 						loader.getLogger().debug(e);
 					}

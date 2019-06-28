@@ -48,7 +48,7 @@ public class FabricLoader implements net.fabricmc.loader.api.FabricLoader {
 	@Deprecated
 	public static final FabricLoader INSTANCE = new FabricLoader();
 
-	protected static Logger LOGGER = LogManager.getFormatterLogger("Okyanus");
+	protected static Logger LOGGER = LogManager.getFormatterLogger("Fabric|Loader");
 
 	protected final Map<String, ModContainer> modMap = new HashMap<>();
 	protected List<ModContainer> mods = new ArrayList<>();
@@ -160,7 +160,7 @@ public class FabricLoader implements net.fabricmc.loader.api.FabricLoader {
 				break;
 		}
 
-		LOGGER.info("[Okyanus] " + modText, candidateMap.values().size(), candidateMap.values().stream()
+		LOGGER.info("[" + getClass().getSimpleName() + "] " + modText, candidateMap.values().size(), candidateMap.values().stream()
 			.map(info -> String.format("%s@%s", info.getInfo().getId(), info.getInfo().getVersion().getFriendlyString()))
 			.collect(Collectors.joining(", ")));
 
@@ -173,7 +173,7 @@ public class FabricLoader implements net.fabricmc.loader.api.FabricLoader {
 		// add mods to classpath
 		// TODO: This can probably be made safer, but that's a long-term goal
 		for (ModContainer mod : mods) {
-			if (!mod.getInfo().getId().equals("okyanus")) {
+			if (!mod.getInfo().getId().equals("fabricloader")) {
 				FabricLauncherBase.getLauncher().propose(mod.getOriginUrl());
 			}
 		}

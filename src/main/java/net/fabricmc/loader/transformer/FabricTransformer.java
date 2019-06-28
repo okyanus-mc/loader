@@ -19,10 +19,7 @@ package net.fabricmc.loader.transformer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.entrypoint.EntrypointTransformer;
 import net.fabricmc.loader.launch.common.FabricLauncherBase;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.*;
 
 public final class FabricTransformer {
 	public static byte[] lwTransformerHook(String name, String transformedName, byte[] bytes) {

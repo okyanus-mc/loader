@@ -20,7 +20,6 @@ import com.google.gson.JsonElement;
 import net.fabricmc.loader.api.Version;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
 
 public interface ModMetadata {
@@ -44,7 +43,6 @@ public interface ModMetadata {
 	Collection<Person> getContributors();
 	ContactInformation getContact();
 	Collection<String> getLicense();
-	Map<String, String> getTransformers();
 
 	/**
 	 * Get the path to an icon.
