@@ -42,6 +42,10 @@ public class JavaLanguageAdapter implements LanguageAdapter {
 				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 					return false;
 				}
+			case "club/issizler/okyanus/api/Mod":
+				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+					return false;
+				}
 		}
 
 		InputStream stream = FabricLauncherBase.getLauncher().getResourceAsStream(className);
