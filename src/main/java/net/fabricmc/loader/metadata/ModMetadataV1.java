@@ -257,13 +257,29 @@ public class ModMetadataV1 implements LoaderModMetadata {
 					}
 
 					ctr.dependencies.add(new ModDependency() {
+						private boolean wasFabric = false;
+
 						@Override
 						public String getModId() {
+							if (id.equals("fabricloader")) {
+								wasFabric = true;
+								return "okyanus";
+							}
+
 							return id;
 						}
 
 						@Override
 						public boolean matches(Version version) {
+
+							if (wasFabric) {
+								try {
+									version = Version.parse("0.4.8"); // Simulated Fabric Loader Version
+								} catch (VersionParsingException e) {
+									e.printStackTrace();
+								}
+							}
+
 							for (String s : matcherStringList) {
 								try {
 									if (VersionPredicateParser.matches(version, s)) {
