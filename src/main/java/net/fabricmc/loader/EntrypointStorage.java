@@ -16,8 +16,6 @@
 
 package net.fabricmc.loader;
 
-import net.fabricmc.loader.FabricLoader;
-import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.api.EntrypointException;
 import net.fabricmc.loader.api.LanguageAdapter;
 import net.fabricmc.loader.api.LanguageAdapterException;
@@ -25,7 +23,6 @@ import net.fabricmc.loader.launch.common.FabricLauncherBase;
 import net.fabricmc.loader.metadata.EntrypointMetadata;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 class EntrypointStorage {
 	static interface Entry {

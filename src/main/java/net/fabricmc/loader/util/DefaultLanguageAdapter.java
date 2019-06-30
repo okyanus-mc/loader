@@ -21,7 +21,6 @@ import net.fabricmc.loader.api.LanguageAdapterException;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.launch.common.FabricLauncherBase;
 
-import java.lang.invoke.MethodHandle;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;

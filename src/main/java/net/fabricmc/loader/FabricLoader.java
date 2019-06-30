@@ -16,14 +16,11 @@
 
 package net.fabricmc.loader;
 
-import club.issizler.okyanus.api.Mod;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.EntrypointException;
 import net.fabricmc.loader.api.LanguageAdapter;
 import net.fabricmc.loader.api.MappingResolver;
 import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.discovery.*;
-import net.fabricmc.loader.launch.common.FabricLauncher;
 import net.fabricmc.loader.launch.common.FabricLauncherBase;
 import net.fabricmc.loader.launch.knot.Knot;
 import net.fabricmc.loader.metadata.EntrypointMetadata;
@@ -32,7 +29,8 @@ import net.fabricmc.loader.util.DefaultLanguageAdapter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;

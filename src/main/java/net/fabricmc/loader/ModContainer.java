@@ -17,8 +17,6 @@
 package net.fabricmc.loader;
 
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.fabricmc.loader.language.LanguageAdapter;
-import net.fabricmc.loader.launch.common.FabricLauncherBase;
 import net.fabricmc.loader.metadata.LoaderModMetadata;
 import net.fabricmc.loader.util.FileSystemUtil;
 import net.fabricmc.loader.util.UrlConversionException;
@@ -28,8 +26,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ModContainer implements net.fabricmc.loader.api.ModContainer {
 	private final LoaderModMetadata info;
