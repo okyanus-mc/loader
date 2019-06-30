@@ -4,6 +4,8 @@ import com.google.gson.JsonObject
 
 plugins {
 	id 'java'
+	id 'signing'
+	id 'maven'
 	id 'maven-publish'
 
 	id 'idea'
@@ -151,24 +153,21 @@ publishing {
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
 			}
-			artifact(file('src/main/resources/fabric-installer.json')) {
-				builtBy remapJar
-			}
-			artifact(file('src/main/resources/fabric-installer.launchwrapper.json')) {
-				builtBy remapJar
-				classifier = "launchwrapper"
-			}
 		}
 	}
 
 	// select the repositories you want to publish to
 	repositories {
-		if (project.hasProperty('mavenPass')) {
+		if (project.hasProperty('nexusPassword')) {
 			maven {
-				url = "http://mavenupload.modmuss50.me/"
+				def releases = "https://maven.issizler.club/repository/maven-releases/"
+				def snapshots = "https://maven.issizler.club/repository/maven-snapshots/"
+				def currentRepo = snapshots //version.endsWith("-SNAPSHOT") ? snapshots : releases
+
+				url = currentRepo
 				credentials {
-					username = "buildslave"
-					password = project.getProperty('mavenPass')
+					username = "admin"
+					password = project.getProperty('nexusPassword')
 				}
 			}
 		}
