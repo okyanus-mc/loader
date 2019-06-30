@@ -20,7 +20,6 @@ import club.issizler.okyanus.json.installer.InstallerFile;
 import club.issizler.okyanus.json.installer.Library;
 import com.google.gson.Gson;
 import net.fabricmc.loader.util.UrlUtil;
-import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -29,11 +28,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.FileSystem;
 import java.nio.file.*;
-import java.util.*;
+import java.util.Objects;
+import java.util.Properties;
 import java.util.stream.Stream;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 
 public class FabricServerLauncher {
 	private static final ClassLoader parentLoader = FabricServerLauncher.class.getClassLoader();

@@ -19,7 +19,6 @@ package net.fabricmc.loader.game;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.launch.common.FabricLauncherBase;
 import net.fabricmc.loader.util.Arguments;
 import net.fabricmc.loader.util.FileSystemUtil;

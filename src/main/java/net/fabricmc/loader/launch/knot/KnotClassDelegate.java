@@ -39,7 +39,6 @@ import java.security.CodeSource;
 import java.security.cert.Certificate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.Manifest;
 
 class KnotClassDelegate {

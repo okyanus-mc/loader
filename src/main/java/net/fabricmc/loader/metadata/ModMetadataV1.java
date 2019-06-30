@@ -16,7 +16,6 @@
 
 package net.fabricmc.loader.metadata;
 
-import com.google.common.base.Joiner;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import net.fabricmc.api.EnvType;

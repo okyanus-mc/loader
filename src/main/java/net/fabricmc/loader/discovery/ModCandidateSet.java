@@ -19,7 +19,6 @@ package net.fabricmc.loader.discovery;
 import com.google.common.base.Joiner;
 import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
-import net.fabricmc.loader.api.metadata.ModMetadata;
 
 import java.util.*;
 import java.util.stream.Collectors;

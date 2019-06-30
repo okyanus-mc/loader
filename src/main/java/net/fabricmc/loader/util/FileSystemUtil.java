@@ -24,7 +24,8 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class FileSystemUtil {
     public static class FileSystemDelegate implements AutoCloseable {

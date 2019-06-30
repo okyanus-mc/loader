@@ -21,8 +21,7 @@ import net.fabricmc.loader.launch.common.FabricLauncherBase;
 
 import java.applet.Applet;
 import java.applet.AppletStub;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
